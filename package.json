@@ -1,0 +1,16 @@
+{
+  "name": "snakeisback",
+  "version": "1.0.0",
+  "description": "",
+  "main": "snake.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "genetic-js": "^0.1.14",
+    "mithril": "^1.1.6",
+    "tensorflow": "^0.7.0"
+  }
+}
