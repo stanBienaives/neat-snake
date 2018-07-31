@@ -1,15 +1,15 @@
-import Snake from './snake.js';
-import Cell from './cell.js';
+const Snake = require('./snake');
+const Cell = require('./cell');
 
-export default class Board  {
+class Board {
 
-  constructor(size, brain) {
+  constructor(size, brain, snakeCells) {
     this._size = size;
     this.matrix = this.generateEmptyMatrix();
 
-    this.snake = new Snake(10, this, brain);
+    this.snake = Snake.fromArray(snakeCells, brain, size);
     this.addCherry();
-    // const snake = new Snake(5);
+
     this.drawSnake();
     this._score = 0;
   }
@@ -26,14 +26,14 @@ export default class Board  {
     return this._score;
   }
 
-
-
   generateEmptyMatrix() {
-    return Array(this.size).fill().map((_, i) => {
-      return Array(this.size)
-        .fill()
-        .map((_, i) => 0);
-    });
+    return Array(this.size)
+      .fill()
+      .map(() => {
+        return Array(this.size)
+          .fill()
+          .map(() => 0);
+      });
   }
 
   getMatrix() {
@@ -48,21 +48,34 @@ export default class Board  {
     return this.matrix[cell.x][cell.y];
   }
 
-  addCherry(cell= this.randomCell()) {
+  addCherry(cell = this.randomCell()) {
     this._cherry = cell;
     this.setValue(cell, 2);
   }
 
   randomCell() {
-    const randomVal = () => Math.floor(Math.random() * this.size)
+    const randomVal = () => Math.floor(Math.random() * (this.size - 1));
+
     return new Cell(randomVal(), randomVal());
   }
 
 
-  moveSnake() {
-    this.snake.move();
-    this.drawSnake()
-    this.collectPoints();
+  moveSnake(direction) {
+    if (direction)
+      this.snake.moveDirection(direction);
+    else
+      this.snake.move(this.cherry, this.size);
+
+    if (this.snake.isDead())
+      return;
+
+    if (this.snake.head.isEqual(this.cherry)) {
+      this.snake.eat();
+      this._score += 1;
+      this.addCherry();
+    }
+
+    this.drawSnake();
   }
 
   drawSnake() {
@@ -75,11 +88,6 @@ export default class Board  {
     return this.snake.isDead();
   }
 
-  collectPoints() {
-    if (this.snake.head.x == this.cherry.x && this.snake.head.y == this.cherry.y) {
-      this._score += 1;
-      this.addCherry();
-    }
-  }
-
 }
+
+module.exports = Board;

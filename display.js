@@ -6,10 +6,8 @@ const size = 30;
 
 class State  {
   constructor() {
-    // this.snake = new Snake(10);
     this.game = new Game();
     this._pause = false;
-    // this.matrix = this.game.getMatrix();
   }
 
   get matrix () {
@@ -21,8 +19,11 @@ class State  {
   }
 
   iterate () {
-    this.game.iterate();
+    if (!this.game.gameOver)
+      return this.game.iterate();
+    this.game = new Game();
   } 
+
   tooglePause() {
     this._pause = !this._pause;
   }
@@ -38,13 +39,13 @@ const board = {
         state.iterate();
         m.redraw();
       }
-    }, 30)
+    }, 300);
   },
   view: () => {
 
     return m('.board', {
       style: {
-        "grid-template-columns": `repeat(${size}, auto)` , 
+        "grid-template-columns": `repeat(${size}, auto)`, 
         "grid-template-rows": `repeat(${size}, auto)`, 
       },
       onclick: () => state.tooglePause(),
@@ -52,19 +53,18 @@ const board = {
       return line.map((cell) => m('.cell',{
         class: (!cell)? 'white' : (cell == 1)? 'black' : 'red',
       }, cell));
-    }))
-  }
-}
+    }));
+  },
+};
 
 const log = {
   view: () => {
     return m('.log', state.game.fitness)
-  }
-}
-
-
+  },
+};
 
 const playground = document.querySelector('.playground');
 const logs = document.querySelector('.logs');
+
 m.mount(playground, board);
 m.mount(logs, log);

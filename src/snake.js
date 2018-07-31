@@ -1,7 +1,7 @@
 const Cell = require('./cell');
 
 class Snake {
-  constructor(length, brain, boardSize = 20) {
+  constructor(brain, boardSize = 20) {
     this._body = [];
     this.boardSize = boardSize;
     this.brain = brain || this.defaultBrain;
@@ -226,8 +226,8 @@ class Snake {
   }
 
 
-  static fromArray(positions, boardSize) {
-    const snake = new Snake(positions.length, null, boardSize);
+  static fromArray(positions, brain, boardSize) {
+    const snake = new Snake(brain, boardSize);
 
     for (let index = 0; index < positions.length; index += 1) {
       snake.body.push(new Cell(...positions[index]));
