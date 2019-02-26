@@ -1,12 +1,17 @@
 import m from "mithril";
 import Game  from './src/game.js';
+import NeuralNetwork from './src/neural-network'
+import best from './best-dna.json';
+
+console.log(best);
 
 
 const size = 30;
 
 class State  {
-  constructor() {
-    this.game = new Game();
+  constructor(brain) {
+    this.brain = brain;
+    this.game = new Game(this.brain);
     this._pause = false;
   }
 
@@ -21,7 +26,7 @@ class State  {
   iterate () {
     if (!this.game.gameOver)
       return this.game.iterate();
-    this.game = new Game();
+   this.game = new Game(this.brain);
   } 
 
   tooglePause() {
@@ -29,7 +34,32 @@ class State  {
   }
 }
 
-const state = new State();
+const brain = new NeuralNetwork();
+brain.setDna(best);
+
+const state = new State((sensors) => {
+  const output = brain.predict(sensors);
+
+  return directionFromScalar(output);
+});
+
+const directionFromScalar = (output) => {
+  if (output < 0.25)
+    // Left
+    return [0, -1];
+
+  if (output < 0.5)
+    // Up
+    return [-1, 0];
+
+  if (output < 0.75)
+    // Right
+    return [0, 1];
+
+  // Bottom
+  return [1, 0];
+};
+
 
 
 const board = {
@@ -39,7 +69,7 @@ const board = {
         state.iterate();
         m.redraw();
       }
-    }, 300);
+    }, 30);
   },
   view: () => {
 

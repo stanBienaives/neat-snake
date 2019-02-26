@@ -1,10 +1,11 @@
 const Cell = require('./cell');
 
+
 class Snake {
   constructor(brain, boardSize = 20) {
     this._body = [];
-    this.boardSize = boardSize;
     this.brain = brain || this.defaultBrain;
+    this._lifespan = Snake.lifeSpan();
   }
 
   get head() {
@@ -21,6 +22,14 @@ class Snake {
 
   get body() {
     return this._body;
+  }
+
+  /**
+   * Shadow tail
+   *
+   */
+  get shadowTail() {
+    return this._shadowTail;
   }
 
   /**
@@ -76,8 +85,8 @@ class Snake {
    * @returns {undefined}
    */
   _move([x, y]) {
-    if (this.isDead())
-      return;
+
+    this._lifespan -= 1;
 
     const newHead = new Cell(this.head.x + x, this.head.y + y);
 
@@ -90,17 +99,13 @@ class Snake {
    * @returns {undefined}
    */
   eat() {
+    this._lifespan = Snake.lifeSpan();
+
     this.body.push(this._shadowTail);
     delete this._shadowTail;
+
   }
 
-  /**
-   * Shadow tail
-   *
-   */
-  get shadowTail() {
-    return this._shadowTail;
-  }
 
   /**
    * Returns sensors as array
@@ -183,12 +188,15 @@ class Snake {
     };
   }
 
-  isDead() {
+  isDead(boardSize) {
+
+    if (this._lifespan <= 0)
+      return true;
 
     if (this.isOverlapping())
       return true;
 
-    if (!this.insideBox(this.boardSize))
+    if (!this.insideBox(boardSize))
       return true;
 
     return false;
@@ -243,6 +251,10 @@ class Snake {
 
     return snake;
 
+  }
+
+  static lifeSpan() {
+    return 200;
   }
 
 }

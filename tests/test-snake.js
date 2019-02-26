@@ -217,3 +217,48 @@ test('Sensor should detect border of the board', (_t) => {
   });
 
 });
+
+test('brain should command movements', (_t) => {
+  const brain = ([
+    _cherryX,
+    _cherryY,
+    boardUp,
+    boardRight,
+    boardLeft,
+    boardDown,
+    _bodyUp,
+    _bodyRight,
+    _bodyLeft,
+    _bodyDown,
+  ]) => {
+
+    if (boardRight === 0 && boardUp === 0)
+      return [0, 1];
+
+    if (boardDown === 0 && boardRight === 0)
+      return [-1, 0];
+
+    if (boardLeft === 0 && boardDown === 0)
+      return [0, -1];
+
+    return [1, 0];
+  };
+  const boardSize = 2;
+
+  const snake = Snake.fromArray([
+    [0, 0],
+  ], brain);
+
+  snake.move(new Cell(0, 0), 2);
+  _t.true(snake.head.isEqual(new Cell(1, 0)));
+
+  snake.move(new Cell(0, 0), 2);
+  _t.true(snake.head.isEqual(new Cell(1, 1)));
+
+  snake.move(new Cell(0, 0), 2);
+  _t.true(snake.head.isEqual(new Cell(0, 1)));
+
+  snake.move(new Cell(0, 0), 2);
+  _t.true(snake.head.isEqual(new Cell(0, 0)));
+
+});

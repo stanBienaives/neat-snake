@@ -61,7 +61,8 @@ class NeuralNetwork {
    * @returns {array} returns weight and bias as array
    */
   getDna() {
-    return Array.from(this.input_weights.dataSync()).concat(Array.from(this.output_weights.dataSync()))
+    const dna =  Array.from(this.input_weights.dataSync()).concat(Array.from(this.output_weights.dataSync()))
+    return dna;
   }
 
   /**
@@ -70,11 +71,15 @@ class NeuralNetwork {
    * @return {undefined}
    */
   setDna(dna) {
-    const input_weights = Float32Array.from(dna.slice(0, this.input_weights.shape[0]));
-    const output_weights = Float32Array.from(dna.slice(this.input_weights.shape[0], this.output_weights.shape[0]));
+    const input_weights_num = this.input_nodes * this.hidden_nodes;
+    const output_weights_num = this.hidden_nodes * this.output_nodes;
+    const input_weights = Float32Array.from(dna.slice(0, input_weights_num));
+    const output_weights = Float32Array.from(dna.slice(input_weights_num, input_weights_num + output_weights_num ));
 
-    this.input_weights = tf.tensor1d(input_weights);
-    this.output_weights = tf.tensor1d(output_weights);
+    this.input_weights = tf.tensor(input_weights, [this.input_nodes, this.hidden_nodes]);
+    this.output_weights = tf.tensor(output_weights, [this.hidden_nodes, this.output_nodes]);
+    
+    return this;
   }
 
   /**

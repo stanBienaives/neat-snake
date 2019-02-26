@@ -6,6 +6,7 @@ class Board {
   constructor(size, brain, snakeCells) {
     this._size = size;
     this.matrix = this.generateEmptyMatrix();
+    this._iteraction = 0;
 
     this.snake = Snake.fromArray(snakeCells, brain, size);
     this.addCherry();
@@ -66,7 +67,7 @@ class Board {
     else
       this.snake.move(this.cherry, this.size);
 
-    if (this.snake.isDead())
+    if (this.snake.isDead(this.size))
       return;
 
     if (this.snake.head.isEqual(this.cherry)) {
@@ -85,7 +86,7 @@ class Board {
   }
 
   gameOver() {
-    return this.snake.isDead();
+    return this.snake.isDead(this.size);
   }
 
 }

@@ -4,11 +4,11 @@ const NeuralNetwork = require('./neural-network');
 class Game {
 
   constructor (brain) {
-    this.board = new Board(30, brain = brain2, this.defaultSnakeCells());
+    this.board = new Board(30, brain, this.defaultSnakeCells());
   }
 
   get gameOver() {
-    return this.board.snake.isDead();
+    return this.board.gameOver();
   }
 
   get matrix() {
@@ -16,7 +16,7 @@ class Game {
   }
 
   get fitness() {
-    return this.board.score;
+    return this.score;
   }
 
   get score() {
@@ -46,25 +46,5 @@ class Game {
 
 
 }
-
-
-const brain2 = function(sensors) {
-  const nn = new NeuralNetwork();
-  const output = nn.predict(sensors);
-
-  return directionFromScalar(output);
-}
-
-const directionFromScalar = function(output) {
-  if (output < 0.25)
-    return [0,-1]; //left
-  if (output < 0.5)
-    return [-1,0]; //up
-  if (output < 0.75)
-    return [0,1]; //right
-
-  return [1,0]; //bottom
-}
-
 
 module.exports = Game;

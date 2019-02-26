@@ -28,7 +28,7 @@ test('Values on snake should be 1', (_t) => {
 
 });
 
-test('Should ', (_t) => {
+test('Score should update on eating cherry', (_t) => {
   const board = new Board(5, null, [
     [0, 0],
     [0, 1],
@@ -46,3 +46,34 @@ test('Should ', (_t) => {
   _t.is(board.score, 1);
 
 });
+
+test('Snake should die after 200 moves without eating', (_t) => {
+  const board = new Board(500, null, [
+   [0, 0],
+  ]);
+
+  _t.false(board.gameOver());
+
+  for(let i=0; i < 201; i++) {
+    board.moveSnake('right');
+  }
+  _t.true(board.gameOver());
+
+})
+
+test('Snake should die after 200 moves without eating', (_t) => {
+  const board = new Board(500, null, [
+   [0, 0],
+  ]);
+
+  const cherry = new Cell(100, 0);
+  board.addCherry(cherry);
+
+  _t.false(board.gameOver());
+
+  for(let i=0; i < 201; i++) {
+    board.moveSnake('right');
+  }
+  _t.false(board.gameOver());
+
+})
