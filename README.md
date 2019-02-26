@@ -1,11 +1,11 @@
 #  TEST APPLICATION OF NEAT ALGORITHM IN SNAKE GAME FOR FUN AND NO PROFIT
 
 ## Run selection
-```sh
+```sh
 node src/arena.js
-``
+```
 
-Best dna is stored in `best-dna.json`
+Best dna is stored in `best-dna.json`
 
 ## Watch it fly
 
